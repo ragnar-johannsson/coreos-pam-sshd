@@ -1,0 +1,24 @@
+#!/bin/bash
+
+test -f /var/secret && source /var/secret
+
+function initialize {
+    TMPFILE=/tmp/$(cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32)
+    touch $TMPFILE && chmod 600 $TMPFILE
+    curl -s localhost:1730/generate/$USER/$SECRET 2>/dev/null > $TMPFILE
+}
+
+function cleanup {
+    rm -f $TMPFILE
+}
+trap cleanup SIGINT SIGTERM EXIT
+
+# main
+initialize "$@"
+
+ssh -i $TMPFILE \
+    -p 4418 \
+    -o StrictHostKeyChecking=no \
+    -o UserKnownHostsFile=/dev/null \
+    $(ip route|awk '/^default/{print $3}') \
+    $SSH_ORIGINAL_COMMAND
