@@ -1,0 +1,7 @@
+ListenAddress 0.0.0.0:4418
+UsePrivilegeSeparation sandbox
+Subsystem sftp internal-sftp
+ClientAliveInterval 180
+UseDNS no
+AuthorizedKeysCommand /bin/docker run --entrypoint /fetch_authorized_keys --link pam-sshd ragnarb/coreos-pam-sshd
+AuthorizedKeysCommandUser core
