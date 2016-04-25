@@ -1,0 +1,55 @@
+#cloud-config
+coreos:
+  units:
+    - name: "pam-sshd.service"
+      command: "start"
+      content: |
+        [Unit]
+        Description=An SSH server with PAM support
+        After=docker.service
+
+        [Service]
+        EnvironmentFile=-/etc/default/pam-sshd
+        ExecStartPre=-/opt/pam-sshd-prep
+        ExecStartPre=-/bin/docker rm -f pam-sshd
+        ExecStart=/bin/docker run --privileged --name pam-sshd $OPTS $CONTAINER
+        Restart=on-failure
+
+        [Install]
+        WantedBy=multi-user.target
+write_files:
+  - path: "/opt/pam-sshd-prep"
+    permissions: "0755"
+    owner: "root"
+    content: |
+      #!/bin/bash
+
+      /bin/docker run \
+          --privileged \
+          --entrypoint /merge_usrfiles \
+          -v /etc/passwd:/etc/passwd \
+          -v /usr/share/baselayout/passwd:/usr/share/baselayout/passwd \
+          -v /etc/group:/etc/group \
+          -v /usr/share/baselayout/group:/usr/share/baselayout/group \
+          registry.greenqloud.com/ragnarb/coreos-pam-sshd
+
+      systemctl restart sshd
+
+  - path: "/etc/default/pam-sshd"
+    permissions: "0644"
+    owner: "root"
+    content: |
+      CONTAINER="registry.greenqloud.com/ragnarb/coreos-pam-sshd"
+      OPTS="-v /etc/passwd:/etc/passwd -v /etc/shadow:/etc/shadow -v /etc/group:/etc/group -v /home:/home -p 22:22"
+
+  - path: "/etc/ssh/sshd_config"
+    permissions: "0644"
+    owner: "root"
+    content: |
+      ListenAddress 0.0.0.0:4418
+      UsePrivilegeSeparation sandbox
+      Subsystem sftp internal-sftp
+      ClientAliveInterval 180
+      UseDNS no
+      AuthorizedKeysCommand /bin/docker run --entrypoint /fetch_authorized_keys --link pam-sshd registry.greenqloud.com/ragnarb/coreos-pam-sshd
+      AuthorizedKeysCommandUser core
