@@ -10,7 +10,7 @@ First, deploy a new CoreOS instance with `cloud-config.yml` as userdata, or conf
 
 Second, prepare a container based on `ragnarb/coreos-pam-sshd`, installing the PAM modules you need and any configurations that might be called for. Push said container.
 
-Lastly, configure the **CONTAINER** variable in `/etc/default/pam-sshd` to point to your container and adjust any *docker run* options you might need in the **OPTS** variable.
+Lastly, configure the *CONTAINER* variable in `/etc/default/pam-sshd` to point to your container and adjust any docker run options you might need in the *OPTS* variable.
 
 ### How does it work?
 
@@ -20,7 +20,7 @@ Once the host has queried for username's public key (essentially the user's auth
 
 ### Disclaimer
 
-The `cloud-config.yml` provided changes the configuration of the SSH server on the host it is run on. Furthermore, CoreOS specific system users and groups as referenced by the **usrfiles** directive in `/etc/nsswitch.conf` are merged into `/etc/passwd` and `/etc/group` for sshd privilege-separation to work in the proxy container. This may break future updates of CoreOS. Do not deploy blindly; understand the code before continuing.
+The `cloud-config.yml` provided changes the configuration of the SSH server on the host it is run on. Furthermore, CoreOS specific system users and groups as referenced by the *usrfiles* directive in `/etc/nsswitch.conf` are merged into `/etc/passwd` and `/etc/group` for sshd privilege-separation to work in the proxy container. This may break future updates of CoreOS. Do not deploy blindly; understand the code before continuing.
 
 ### License
 
