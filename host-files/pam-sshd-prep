@@ -1,0 +1,12 @@
+#!/bin/bash
+
+/bin/docker run \
+    --privileged \
+    --entrypoint /merge_usrfiles \
+    -v /etc/passwd:/etc/passwd \
+    -v /usr/share/baselayout/passwd:/usr/share/baselayout/passwd \
+    -v /etc/group:/etc/group \
+    -v /usr/share/baselayout/group:/usr/share/baselayout/group \
+    ragnarb/coreos-pam-sshd
+
+systemctl restart sshd
