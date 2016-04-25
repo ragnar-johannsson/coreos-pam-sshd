@@ -1,0 +1,2 @@
+#!/bin/bash
+curl -s pam-sshd:1730/retrieve/$USERNAME 2>/dev/null
