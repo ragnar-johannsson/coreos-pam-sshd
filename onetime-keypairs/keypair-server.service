@@ -1,0 +1,12 @@
+[Unit]
+Description=A server for generating one time SSH keypair on demand
+Requires=keypair-server-config.service
+After=network.target auditd.service keypair-server-config.service
+
+[Service]
+EnvironmentFile=-/var/secret
+ExecStart=/opt/onetime-keypair-server.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

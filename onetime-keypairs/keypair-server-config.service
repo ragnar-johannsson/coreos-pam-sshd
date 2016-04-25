@@ -1,0 +1,10 @@
+[Unit]
+Description=Generate a one-time secret for communication with keypair server
+After=local-fs.target
+
+[Service]
+ExecStart=/opt/generate_secret.py
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
