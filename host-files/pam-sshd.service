@@ -1,0 +1,13 @@
+[Unit]
+Description=An SSH server with PAM support
+After=docker.service
+
+[Service]
+EnvironmentFile=-/etc/default/pam-sshd
+ExecStartPre=-/opt/pam-sshd-prep
+ExecStartPre=-/bin/docker rm -f pam-sshd
+ExecStart=/bin/docker run --privileged --name pam-sshd $OPTS $CONTAINER
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
