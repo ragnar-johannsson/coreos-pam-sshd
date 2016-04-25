@@ -1,0 +1,2 @@
+CONTAINER="ragnarb/coreos-pam-sshd"
+OPTS="-v /etc/passwd:/etc/passwd -v /etc/shadow:/etc/shadow -v /etc/group:/etc/group -v /home:/home -p 22:22"
