@@ -31,7 +31,7 @@ write_files:
           -v /usr/share/baselayout/passwd:/usr/share/baselayout/passwd \
           -v /etc/group:/etc/group \
           -v /usr/share/baselayout/group:/usr/share/baselayout/group \
-          registry.greenqloud.com/ragnarb/coreos-pam-sshd
+          ragnarb/coreos-pam-sshd
 
       systemctl restart sshd
 
@@ -39,7 +39,7 @@ write_files:
     permissions: "0644"
     owner: "root"
     content: |
-      CONTAINER="registry.greenqloud.com/ragnarb/coreos-pam-sshd"
+      CONTAINER="ragnarb/coreos-pam-sshd"
       OPTS="-v /etc/passwd:/etc/passwd -v /etc/shadow:/etc/shadow -v /etc/group:/etc/group -v /home:/home -p 22:22"
 
   - path: "/etc/ssh/sshd_config"
@@ -51,5 +51,5 @@ write_files:
       Subsystem sftp internal-sftp
       ClientAliveInterval 180
       UseDNS no
-      AuthorizedKeysCommand /bin/docker run --entrypoint /fetch_authorized_keys --link pam-sshd registry.greenqloud.com/ragnarb/coreos-pam-sshd
+      AuthorizedKeysCommand /bin/docker run --entrypoint /fetch_authorized_keys --link pam-sshd ragnarb/coreos-pam-sshd
       AuthorizedKeysCommandUser core
