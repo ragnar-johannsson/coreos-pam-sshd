@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+
+FILES = [ ('/etc/passwd', '/usr/share/baselayout/passwd'),
+          ('/etc/group', '/usr/share/baselayout/group') ]
+
+for dst, src in FILES:
+    with open(dst, 'r') as dstfile:
+        dstobjs = [line.split(':')[0] for line in dstfile.readlines()]
+
+    with open(src, 'r') as srcfile:
+        for line in srcfile.readlines():
+            if not line.split(':')[0] in dstobjs:
+                with open(dst, 'a') as dstfile:
+                    dstfile.write(line)
