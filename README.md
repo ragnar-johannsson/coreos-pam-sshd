@@ -10,7 +10,7 @@ First, deploy a new CoreOS instance with `cloud-config.yml` as userdata, or conf
 
 Second, prepare a container based on `ragnarb/coreos-pam-sshd`, installing the PAM modules you need and any configurations that might be called for. Push said container.
 
-Lastly, configure the *CONTAINER* variable in `/etc/default/pam-sshd` to point to your container and adjust any docker run options you might need in the *OPTS* variable.
+Lastly, configure the *CONTAINER* variable in `/etc/default/pam-sshd` to point to your container and adjust any docker run options you might need in the *OPTS* variable. Restart the `pam-sshd` service.
 
 ### How does it work?
 
