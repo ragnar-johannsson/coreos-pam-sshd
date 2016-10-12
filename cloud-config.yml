@@ -1,8 +1,18 @@
 #cloud-config
 coreos:
   units:
+    - name: "sshd.socket"
+      command: "restart"
+      runtime: true
+      content: |
+        [Socket]
+        ListenStream=4418
+        FreeBind=true
+        Accept=yes
+
     - name: "pam-sshd.service"
       command: "start"
+      
       content: |
         [Unit]
         Description=An SSH server with PAM support
@@ -17,6 +27,7 @@ coreos:
 
         [Install]
         WantedBy=multi-user.target
+
 write_files:
   - path: "/opt/pam-sshd-prep"
     permissions: "0755"
@@ -33,8 +44,6 @@ write_files:
           -v /usr/share/baselayout/group:/usr/share/baselayout/group \
           ragnarb/coreos-pam-sshd
 
-      systemctl restart sshd
-
   - path: "/etc/default/pam-sshd"
     permissions: "0644"
     owner: "root"
@@ -46,7 +55,6 @@ write_files:
     permissions: "0644"
     owner: "root"
     content: |
-      ListenAddress 0.0.0.0:4418
       UsePrivilegeSeparation sandbox
       Subsystem sftp internal-sftp
       ClientAliveInterval 180
