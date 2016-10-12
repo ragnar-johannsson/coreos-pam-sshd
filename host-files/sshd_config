@@ -1,4 +1,3 @@
-ListenAddress 0.0.0.0:4418
 UsePrivilegeSeparation sandbox
 Subsystem sftp internal-sftp
 ClientAliveInterval 180
